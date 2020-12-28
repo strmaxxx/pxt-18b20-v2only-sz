@@ -7,6 +7,7 @@ namespace DS18B20{
     let temp = 0
     let temperature = 0
     let ack = 0
+    let lastTemp = 0
     export enum ValType {
         //% block="temperature(℃)" enumval=0
         DS18B20_temperature_C,
@@ -64,12 +65,16 @@ namespace DS18B20{
         low = read_18b20(pin)
         high = read_18b20(pin)
         temperature = high << 8 | low
+        temperature = temperature / 16
+        if(temperature > 130){
+            temperature = lastTemp
+        }
+        lastTemp = temperature
         switch (state) {
             case ValType.DS18B20_temperature_C:
-                temperature = temperature / 16
                 return temperature
             case ValType.DS18B20_temperature_F:
-                temperature = temperature / 16 * 33.8
+                temperature = temperature * 33.8
                 return temperature
             default:
                 return 0
