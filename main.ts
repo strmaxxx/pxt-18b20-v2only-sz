@@ -66,10 +66,10 @@ namespace DS18B20{
         temperature = high << 8 | low
         switch (state) {
             case ValType.DS18B20_temperature_C:
-                temperature = temperature * 16
+                temperature = temperature / 16
                 return temperature
             case ValType.DS18B20_temperature_F:
-                temperature = temperature * 16 * 33.8
+                temperature = temperature / 16 * 33.8
                 return temperature
             default:
                 return 0
