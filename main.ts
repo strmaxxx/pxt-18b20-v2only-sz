@@ -7,6 +7,13 @@ namespace DS18B20{
     let temp = 0
     let temperature = 0
     let ack = 0
+    export enum ValType {
+        //% block="temperature(℃)" enumval=0
+        DS18B20_temperature_C,
+
+        //% block="temperature(℉)" enumval=1
+        DS18B20_temperature_F
+    }
     function init_18b20(mpin:DigitalPin) {
         pins.digitalWritePin(mpin, 0)
         control.waitMicros(600)
@@ -45,8 +52,8 @@ namespace DS18B20{
         }
         return dat
     }
-    //% block="value of DS18B20 at pin %pin"
-    export function Ds18b20Temp(pin:DigitalPin):number{
+    //% block="value of DS18B20 %state at pin %pin"
+    export function Ds18b20Temp(state:ValType,pin:DigitalPin):number{
         init_18b20(pin)
         write_18b20(pin,0xCC)
         write_18b20(pin,0x44)
@@ -57,8 +64,17 @@ namespace DS18B20{
         low = read_18b20(pin)
         high = read_18b20(pin)
         temperature = high << 8 | low
-        temperature = temperature * 16
-        return temperature
+        switch (state) {
+            case ValType.DS18B20_temperature_C:
+                temperature = temperature * 16
+                return temperature
+            case ValType.DS18B20_temperature_F:
+                temperature = temperature * 16 * 33.8
+                return temperature
+            default:
+                return 0
+        }
+
     }
 
 }
