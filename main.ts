@@ -1,5 +1,5 @@
 //% color=#5042f4 icon="\uf2c9"
-namespace DS18B20{
+namespace DS18B20SZ{
     let sc_byte = 0
     let dat = 0
     let low = 0
