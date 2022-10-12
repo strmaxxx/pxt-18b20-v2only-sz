@@ -64,7 +64,13 @@ namespace DS18B20{
         write_18b20(pin,0xBE)
         low = read_18b20(pin)
         high = read_18b20(pin)
-        temperature = high << 8 | low
+        //temperature = high << 8 | low // don't work in subzero
+
+        let bufr = pins.createBuffer(2);
+        bufr.setNumber(NumberFormat.Int8LE, 0, high);
+        bufr.setNumber(NumberFormat.Int8LE, 1, low);
+        temperature = bufr.getNumber(NumberFormat.Int16BE, 0)
+
         temperature = temperature / 16
         if(temperature > 130){
             temperature = lastTemp
